@@ -12,13 +12,11 @@ public class CharacterMovement : MonoBehaviour
     [SerializeField] private bool isPC = true;
 
     [Header("References GameObjects")]
-    [SerializeField] private GameObject mobileInputLeft;
-    [SerializeField] private GameObject mobileInputRight;
+    [SerializeField] private GameObject joystickInput;
+    [SerializeField] private Animator animator;
 
     private CharacterController characterController;
-
-    private MobileInputController mobileInputLeftController;
-    private MobileInputController mobileInputRightController;
+    private MobileInputController joystickController;
 
     private float turnSmoothVelocity;
 
@@ -28,15 +26,14 @@ public class CharacterMovement : MonoBehaviour
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
-        mobileInputLeftController = mobileInputLeft.GetComponent<MobileInputController>();
-        mobileInputRightController = mobileInputRight.GetComponent<MobileInputController>();
+        joystickController = joystickInput.GetComponent<MobileInputController>();
     }
 
     private void Update()
     {
         HandleInput();
-        MoveCharacter();
-        RotateCharacter();
+        MoveAndRotateCharacter();
+        TriggerAnimations();
     }
 
     /// <summary>
@@ -50,41 +47,53 @@ public class CharacterMovement : MonoBehaviour
         }
         else
         {
-            input = new Vector2(mobileInputLeftController.Horizontal, mobileInputLeftController.Vertical);
+            input = new Vector2(joystickController.Horizontal, joystickController.Vertical);
         }
     }
 
     /// <summary>
-    /// Moves the character based on user input.
+    /// Moves and rotates the character based on user input.
     /// </summary>
-    private void MoveCharacter()
+    private void MoveAndRotateCharacter()
     {
         Vector3 moveDirection = new Vector3(input.x, 0f, input.y).normalized;
 
-        if (moveDirection.magnitude >= 0.1f)
+        if (moveDirection.magnitude <= 0.1f)
         {
-            moveDirection = transform.TransformDirection(moveDirection);
-
-            Vector3 movement = moveDirection * movementConfig.speed * Time.deltaTime;
-            characterController.Move(movement);
+            return;
         }
+
+        // Rotate character towards movement direction
+        float targetAngle = Mathf.Atan2(moveDirection.x, moveDirection.z) * Mathf.Rad2Deg;
+        float smoothAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, movementConfig.rotationSmoothTime);
+        transform.rotation = Quaternion.Euler(0f, smoothAngle, 0f);
+
+        // Move character
+        Vector3 movement = moveDirection * movementConfig.speed * Time.deltaTime;
+        characterController.Move(movement);
     }
 
-
     /// <summary>
-    /// Rotates the character based on user input.
+    /// Triggers the appropriate animation based on movement magnitude.
     /// </summary>
-    private void RotateCharacter()
+    private void TriggerAnimations()
     {
-        if (isPC) return; // Skip rotation handling for PC input.
+        float movementMagnitude = input.magnitude;
 
-        Vector3 targetDirection = new(mobileInputRightController.Horizontal, 0f, mobileInputRightController.Vertical);
-
-        if (targetDirection.magnitude >= 0.1f)
+        if (animator != null)
         {
-            float targetAngle = Mathf.Atan2(targetDirection.x, targetDirection.z) * Mathf.Rad2Deg;
-            float smoothedAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, movementConfig.turnSmoothTime);
-            transform.rotation = Quaternion.Euler(0f, smoothedAngle, 0f);
+            if (movementMagnitude <= 0.1f)
+            {
+                animator.SetTrigger("IdleTrigger");
+            }
+            else if (movementMagnitude > 0.1f && movementMagnitude <= 0.5f)
+            {
+                animator.SetTrigger("WalkTrigger");
+            }
+            else if (movementMagnitude > 0.5f)
+            {
+                animator.SetTrigger("RunTrigger");
+            }
         }
     }
 }
