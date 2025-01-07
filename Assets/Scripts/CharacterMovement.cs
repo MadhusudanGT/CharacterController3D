@@ -16,6 +16,10 @@ public class CharacterMovement : MonoBehaviour
     [SerializeField] private GameObject mobileInputRight;
 
     private CharacterController characterController;
+
+    private MobileInputController mobileInputLeftController;
+    private MobileInputController mobileInputRightController;
+
     private float turnSmoothVelocity;
 
     // Input Values
@@ -24,6 +28,8 @@ public class CharacterMovement : MonoBehaviour
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
+        mobileInputLeftController = mobileInputLeft.GetComponent<MobileInputController>();
+        mobileInputRightController = mobileInputRight.GetComponent<MobileInputController>();
     }
 
     private void Update()
@@ -44,8 +50,7 @@ public class CharacterMovement : MonoBehaviour
         }
         else
         {
-            var mobileInput = mobileInputLeft.GetComponent<MobileInputController>();
-            input = new Vector2(mobileInput.Horizontal, mobileInput.Vertical);
+            input = new Vector2(mobileInputLeftController.Horizontal, mobileInputLeftController.Vertical);
         }
     }
 
@@ -58,10 +63,13 @@ public class CharacterMovement : MonoBehaviour
 
         if (moveDirection.magnitude >= 0.1f)
         {
+            moveDirection = transform.TransformDirection(moveDirection);
+
             Vector3 movement = moveDirection * movementConfig.speed * Time.deltaTime;
             characterController.Move(movement);
         }
     }
+
 
     /// <summary>
     /// Rotates the character based on user input.
@@ -70,8 +78,7 @@ public class CharacterMovement : MonoBehaviour
     {
         if (isPC) return; // Skip rotation handling for PC input.
 
-        var mobileInput = mobileInputRight.GetComponent<MobileInputController>();
-        Vector3 targetDirection = new(mobileInput.Horizontal, 0f, mobileInput.Vertical);
+        Vector3 targetDirection = new(mobileInputRightController.Horizontal, 0f, mobileInputRightController.Vertical);
 
         if (targetDirection.magnitude >= 0.1f)
         {
