@@ -1,0 +1,2 @@
+D:\Offline_Shooter\CharacterContrller\CharacterController3D\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\src\main\cpp\CMakeLists.txt
+D:\Offline_Shooter\CharacterContrller\CharacterController3D\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\src\main\cpp\GameActivity\CMakeLists.txt

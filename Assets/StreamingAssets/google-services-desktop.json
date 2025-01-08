@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "348414822904",
+    "firebase_url": "https://cc3d-a0c2a-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "cc3d-a0c2a",
+    "storage_bucket": "cc3d-a0c2a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:348414822904:android:7db1935928aa3dc4d7ee0d",
+        "android_client_info": {
+          "package_name": "com.MGT.CC3D"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQQFnsrgMTmFK_zFnDcElNnj5m8g9eZQA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
