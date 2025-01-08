@@ -7,10 +7,11 @@ public class Coins : MonoBehaviour
     [SerializeField] private int _coinId = -1;
     [SerializeField] int cointPoint = 5;
 
-    private void Awake()
+    private void Start()
     {
         poolManager = ManagerRegistry.Get<PoolManagerGen>();
     }
+
     public void InitCoins(int id)
     {
         //Debug.Log("INIT COINS");

@@ -8,14 +8,16 @@ using UnityEngine;
 public class FirebaseManager : MonoBehaviour
 {
     private DatabaseReference _databaseReference;
+    private UIManager _uiManager;
 
     private void Awake()
     {
         ManagerRegistry.Register<FirebaseManager>(this);
+        InitializeFireBase();
     }
     private void Start()
     {
-        InitializeFireBase();
+        _uiManager = ManagerRegistry.Get<UIManager>();
     }
     public void InitializeFireBase()
     {
@@ -121,7 +123,15 @@ public class FirebaseManager : MonoBehaviour
                 {
                     if (updateTask.IsCompleted)
                     {
-                        //Debug.Log($"score updated successfully for device ID {deviceId}. New total: {updatedCoins}");
+                        if (_uiManager)
+                        {
+                            _uiManager.UpdateUserInfo(updatedCoins);
+                            //Debug.Log($"score updated successfully for device ID {deviceId}. New total: {updatedCoins}");
+                        }
+                        else
+                        {
+                            Debug.Log("UIMANAGET WAS NULL");
+                        }
                     }
                     else
                     {
@@ -138,6 +148,12 @@ public class FirebaseManager : MonoBehaviour
 
     public void GetOrCreatUserScore(string deviceId, string userName, System.Action<int> callback)
     {
+        if (_databaseReference == null)
+        {
+            Debug.LogError("DATABASE REFERENCE WAS NULL");
+            return;
+        }
+
         _databaseReference.Child("users").Child(deviceId).GetValueAsync().ContinueWithOnMainThread(task =>
         {
             if (task.IsCompleted)

@@ -11,6 +11,10 @@ public class UIManager : MonoBehaviour
     private FirebaseManager firebaseManager;
     private GameManager gameManager;
 
+    private void Awake()
+    {
+        ManagerRegistry.Register<UIManager>(this);
+    }
     void OnEnable()
     {
         EventManager.updateDeviceId += DeviceId;
@@ -125,10 +129,10 @@ public class UIManager : MonoBehaviour
             return;
         }
 
-        firebaseManager.GetOrCreatUserScore(deviceId, "Madhu", GetUserInfo);
+        firebaseManager.GetOrCreatUserScore(deviceId, "Madhu", UpdateUserInfo);
     }
 
-    void GetUserInfo(int score)
+    public void UpdateUserInfo(int score)
     {
         playerScore.SetText(string.Concat("Score: ", score.ToString()));
     }
