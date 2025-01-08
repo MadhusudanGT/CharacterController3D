@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using DEPT.Unity;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
@@ -13,7 +14,7 @@ public class CharacterMovement : MonoBehaviour
 
     [Header("References GameObjects")]
     [SerializeField] private GameObject joystickInput;
-    [SerializeField] private Animator animator;
+    [SerializeField] private LocomotionAnimator animator;
 
     private CharacterController characterController;
     private MobileInputController joystickController;
@@ -79,21 +80,9 @@ public class CharacterMovement : MonoBehaviour
     private void TriggerAnimations()
     {
         float movementMagnitude = input.magnitude;
-
         if (animator != null)
         {
-            if (movementMagnitude <= 0.1f)
-            {
-                animator.SetTrigger("IdleTrigger");
-            }
-            else if (movementMagnitude > 0.1f && movementMagnitude <= 0.5f)
-            {
-                animator.SetTrigger("WalkTrigger");
-            }
-            else if (movementMagnitude > 0.5f)
-            {
-                animator.SetTrigger("RunTrigger");
-            }
+            animator.SetSpeedXZ(movementMagnitude, Time.deltaTime);
         }
     }
 }
