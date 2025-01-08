@@ -5,9 +5,34 @@ using Sirenix.OdinInspector;
 
 public class UIManager : MonoBehaviour
 {
-    public TMP_Text leaderboardText;
+    [SerializeField] private TMP_Text deviceIdTxt;
+    [SerializeField] private TMP_Text playerScore;
+
     private FirebaseManager firebaseManager;
     private GameManager gameManager;
+
+    void OnEnable()
+    {
+        EventManager.updateDeviceId += DeviceId;
+        EventManager.coinPoints += UpdateCoins;
+    }
+
+    void OnDisable()
+    {
+        EventManager.updateDeviceId -= DeviceId;
+        EventManager.coinPoints -= UpdateCoins;
+    }
+
+    void DeviceId(string deviceId)
+    {
+        deviceIdTxt.SetText(deviceId);
+        GetUserData();
+    }
+
+    void UpdateCoins(int cointPoints)
+    {
+        UpdateUserScore(cointPoints);
+    }
 
     void Start()
     {
@@ -68,7 +93,7 @@ public class UIManager : MonoBehaviour
             return;
         }
 
-        firebaseManager.UpdateUserScore(deviceId, newScore);
+        firebaseManager.UpdateUserCoins(deviceId, newScore);
     }
 
     [Button("GET LEADER BOARD")]
@@ -82,5 +107,29 @@ public class UIManager : MonoBehaviour
             //leaderboardText.text += $"{user.username}: {user.score}\n";
             Debug.Log(user.username + "....USER DATA...." + user.score);
         }
+    }
+
+    [Button("GET USER SCORE")]
+    public void GetUserData()
+    {
+        if (firebaseManager == null)
+        {
+            Debug.Log("firebaseManager instance was null");
+            return;
+        }
+
+        string deviceId = gameManager.DeviceId;
+        if (string.IsNullOrEmpty(gameManager.DeviceId))
+        {
+            Debug.Log("Device id was empty");
+            return;
+        }
+
+        firebaseManager.GetOrCreatUserScore(deviceId, "Madhu", GetUserInfo);
+    }
+
+    void GetUserInfo(int score)
+    {
+        playerScore.SetText(string.Concat("Score: ", score.ToString()));
     }
 }

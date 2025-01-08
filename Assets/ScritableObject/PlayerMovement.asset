@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63c75d800f2a4fa41871fd9bef022fc8, type: 3}
   m_Name: PlayerMovement
   m_EditorClassIdentifier: 
-  speed: 5
+  speed: 1
   turnSmoothTime: 0.2
+  rotationSmoothTime: 0.2
+  drag: 0.2

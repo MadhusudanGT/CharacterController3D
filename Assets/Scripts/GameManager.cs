@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class GameManager : MonoBehaviour
 {
@@ -30,7 +31,7 @@ public class GameManager : MonoBehaviour
     void GetDeviceId()
     {
 #if !UNITY_EDITOR && UNITY_ANDROID
-UpdateDeviceId(GlobalStatic.GetDeviceIdForAndriod(););
+UpdateDeviceId(GlobalStatic.GetDeviceIdForAndriod());
 #elif !UNITY_EDITOR && UNITY_IOS
   Debug.LogError("DEVICE TYPE IOS");
 #else
@@ -43,6 +44,7 @@ UpdateDeviceId(GlobalStatic.GetDeviceIdForAndriod(););
         if (!string.IsNullOrEmpty(_deviceId))
         {
             DeviceId = _deviceId;
+            EventManager.updateDeviceId?.Invoke(_deviceId);
         }
         else
         {

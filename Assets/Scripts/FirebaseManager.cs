@@ -91,26 +91,79 @@ public class FirebaseManager : MonoBehaviour
         });
     }
 
-    public void UpdateUserScore(string deviceId, int newScore)
+    public void UpdateUserCoins(string deviceId, int coinsToAdd)
     {
         if (_databaseReference == null)
         {
-            Debug.Log("DATA BASE REFERENCE WAS NULL");
+            Debug.LogError("DATABASE REFERENCE WAS NULL");
             return;
         }
 
-        _databaseReference.Child("users").Child(deviceId).Child("score").SetValueAsync(newScore).ContinueWithOnMainThread(task =>
+        _databaseReference.Child("users").Child(deviceId).Child("score").GetValueAsync().ContinueWithOnMainThread(task =>
         {
             if (task.IsCompleted)
             {
-                Debug.Log($"Score updated successfully for device ID: {deviceId}");
+                DataSnapshot snapshot = task.Result;
+                int currentCoins = 0;
+
+                if (snapshot.Exists && int.TryParse(snapshot.Value.ToString(), out currentCoins))
+                {
+                    //Debug.Log($"Current score for device ID {deviceId}: {currentCoins}");
+                }
+                else
+                {
+                    Debug.Log($"No coin data found for device ID {deviceId}, initializing to 0.");
+                }
+
+                int updatedCoins = currentCoins + coinsToAdd;
+
+                _databaseReference.Child("users").Child(deviceId).Child("score").SetValueAsync(updatedCoins).ContinueWithOnMainThread(updateTask =>
+                {
+                    if (updateTask.IsCompleted)
+                    {
+                        //Debug.Log($"score updated successfully for device ID {deviceId}. New total: {updatedCoins}");
+                    }
+                    else
+                    {
+                        //Debug.LogError($"Failed to update score for device ID {deviceId}: {updateTask.Exception}");
+                    }
+                });
             }
             else
             {
-                Debug.LogError($"Failed to update score: {task.Exception}");
+                Debug.LogError($"Failed to retrieve coin data for device ID {deviceId}: {task.Exception}");
             }
         });
     }
+
+    public void GetOrCreatUserScore(string deviceId, string userName, System.Action<int> callback)
+    {
+        _databaseReference.Child("users").Child(deviceId).GetValueAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsCompleted)
+            {
+                DataSnapshot snapshot = task.Result;
+
+                if (snapshot.Exists)
+                {
+                    int score = int.Parse(snapshot.Child("score").Value.ToString());
+                    Debug.Log($"Device ID {deviceId} exists. Retrieved score: {score}");
+                    callback(score);
+                }
+                else
+                {
+                    SaveUserData(deviceId, userName, 0);
+                    Debug.Log($"Device ID {deviceId} does not exist. Created new user with score = 0.");
+                    callback(0);
+                }
+            }
+            else
+            {
+                Debug.LogError($"Failed to check if device ID {deviceId} exists: {task.Exception}");
+            }
+        });
+    }
+
 }
 
 [System.Serializable]
