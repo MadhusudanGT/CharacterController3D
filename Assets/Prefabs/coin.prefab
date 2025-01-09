@@ -122,3 +122,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   poolManager: {fileID: 0}
+  _coinId: -1
+  cointData: {fileID: 11400000, guid: e157a3db3726223409a573f2e237e25f, type: 2}

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using DEPT.Unity;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
@@ -104,5 +105,10 @@ public class CharacterMovement : MonoBehaviour
         {
             animator.SetSpeedXZ(movementMagnitude, Time.deltaTime);
         }
+    }
+    [Button("RESET POSITION")]
+    public void ResetPos()
+    {
+        transform.position = movementConfig.initPos;
     }
 }

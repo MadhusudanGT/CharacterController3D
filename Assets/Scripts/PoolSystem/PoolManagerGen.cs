@@ -57,5 +57,6 @@ public enum PoolManagerKeys
 {
     NONE,
     COINS,
-    LEADER_BOARD
+    LEADER_BOARD,
+    COIN_EFFECT
 }

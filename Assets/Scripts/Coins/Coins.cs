@@ -5,7 +5,7 @@ public class Coins : MonoBehaviour
 {
     [SerializeField] private PoolManagerGen poolManager;
     [SerializeField] private int _coinId = -1;
-    [SerializeField] int cointPoint = 5;
+    [SerializeField] CoinsData cointData;
 
     private void Start()
     {
@@ -35,8 +35,13 @@ public class Coins : MonoBehaviour
     {
         if (other.tag == "Player")
         {
+            if(cointData == null)
+            {
+                Debug.Log("COIN DATA WAS NULL");
+                return;
+            }
             Debug.Log($"Trigger Enter: {other.tag}");
-            EventManager.coinPoints?.Invoke(cointPoint);
+            EventManager.coinPoints?.Invoke(cointData.points);
             ReleaseCoin();
         }
     }

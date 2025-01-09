@@ -8,6 +8,11 @@ public class SpawnEnvirnoment : MonoBehaviour
     [SerializeField] private AssetReferenceGameObject _environment;
     private GameObject _instanceReference;
 
+    private void Awake()
+    {
+        LoadEnvironment();
+    }
+
     private void LoadEnvironment()
     {
         if (_instanceReference != null)
