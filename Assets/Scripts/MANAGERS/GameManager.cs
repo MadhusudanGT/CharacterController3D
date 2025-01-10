@@ -40,10 +40,10 @@ public class GameManager : MonoBehaviour
 UpdateDeviceId(GlobalStatic.GetDeviceIdForAndriod());
 #elif !UNITY_EDITOR && UNITY_IOS
   Debug.LogError("DEVICE TYPE IOS");
-    UpdateDeviceId("1234")//Default Device Id
+    UpdateDeviceId("12345")//Default Device Id
 #else
         Debug.LogError("DEVICE ID WAS EMPTY");
-        UpdateDeviceId("1234");
+        UpdateDeviceId("12345");
 #endif
     }
 

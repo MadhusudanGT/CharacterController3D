@@ -40,9 +40,22 @@ public class Coins : MonoBehaviour
                 Debug.Log("COIN DATA WAS NULL");
                 return;
             }
+
+            ParticleEffects();
             Debug.Log($"Trigger Enter: {other.tag}");
             EventManager.coinPoints?.Invoke(cointData.points);
             ReleaseCoin();
+        }
+    }
+
+    void ParticleEffects()
+    {
+        var effect = poolManager.GetObject<CoinEffect>(PoolManagerKeys.COIN_EFFECT);
+
+        if (effect != null)
+        {
+            effect.PlayEffect();
+            effect.transform.localPosition = transform.localPosition;
         }
     }
 }

@@ -56,44 +56,62 @@ public class CharacterMovement : MonoBehaviour
     /// <summary>
     /// Moves and rotates the character based on user input.
     /// </summary>
+    private float gravity = -9.81f;
+    private float verticalVelocity = 0f;
+
     private void MoveAndRotateCharacter()
     {
         Vector3 moveDirection = new Vector3(input.x, 0f, input.y).normalized;
 
         if (moveDirection.magnitude <= 0.1f)
         {
-            return;
+            return; // Skip movement if input is too small
         }
 
+        // Adjust speed based on joystick magnitude
         if (joystickController.magnitude >= 0.2)
         {
-            //Debug.Log(joystickController.magnitude);
             if (joystickController.magnitude <= 0.3f)
             {
                 movementConfig.speed = 0.5f;
             }
             else if (joystickController.magnitude <= 0.6f)
             {
-                movementConfig.speed = 3;
+                movementConfig.speed = 3f;
             }
             else
             {
-                movementConfig.speed = 5;
+                movementConfig.speed = 5f;
             }
         }
         else
         {
-            movementConfig.speed = 0;
+            movementConfig.speed = 0f;
         }
 
-
+        // Rotate the character smoothly
         float targetAngle = Mathf.Atan2(moveDirection.x, moveDirection.z) * Mathf.Rad2Deg;
         float smoothAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, movementConfig.rotationSmoothTime);
         transform.rotation = Quaternion.Euler(0f, smoothAngle, 0f);
 
-        Vector3 movement = moveDirection * movementConfig.speed * Time.deltaTime;
+        // Apply horizontal movement
+        Vector3 horizontalMovement = moveDirection * movementConfig.speed;
+
+        // Apply gravity
+        if (characterController.isGrounded)
+        {
+            verticalVelocity = 0f; // Reset vertical velocity when grounded
+        }
+        else
+        {
+            verticalVelocity += gravity * Time.deltaTime; // Apply gravity over time
+        }
+
+        // Combine horizontal and vertical movement
+        Vector3 movement = new Vector3(horizontalMovement.x, verticalVelocity, horizontalMovement.z) * Time.deltaTime;
         characterController.Move(movement);
     }
+
 
     /// <summary>
     /// Triggers the appropriate animation based on movement magnitude.

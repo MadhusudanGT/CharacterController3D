@@ -9682,6 +9682,7 @@ GameObject:
   - component: {fileID: 430288}
   - component: {fileID: 19806904}
   - component: {fileID: 19938058}
+  - component: {fileID: -8367118363876101818}
   m_Layer: 0
   m_Name: GoldCoinBlast
   m_TagString: Untagged
@@ -14397,6 +14398,18 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &-8367118363876101818
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 143964}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be1d478091aa3ac4494345d6fd7fdd9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &188778
 GameObject:
   m_ObjectHideFlags: 0
