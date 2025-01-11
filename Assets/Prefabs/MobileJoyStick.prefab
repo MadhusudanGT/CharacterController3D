@@ -94,6 +94,7 @@ MonoBehaviour:
   Knob: {fileID: 224015808482065254}
   Horizontal: 0
   Vertical: 0
+  magnitude: 0
   offset: 1
 --- !u!114 &114893535295145918
 MonoBehaviour:
@@ -278,6 +279,7 @@ MonoBehaviour:
   Knob: {fileID: 224195599093456206}
   Horizontal: 0
   Vertical: 0
+  magnitude: 0
   offset: 1
 --- !u!114 &114705082785873618
 MonoBehaviour:

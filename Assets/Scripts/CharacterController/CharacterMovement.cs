@@ -21,8 +21,8 @@ public class CharacterMovement : MonoBehaviour
     private MobileInputController joystickController;
 
     private float turnSmoothVelocity;
-
-    // Input Values
+    private float gravity = -9.81f;
+    private float verticalVelocity = 0f;
     private Vector2 input;
 
     private void Awake()
@@ -56,19 +56,15 @@ public class CharacterMovement : MonoBehaviour
     /// <summary>
     /// Moves and rotates the character based on user input.
     /// </summary>
-    private float gravity = -9.81f;
-    private float verticalVelocity = 0f;
-
     private void MoveAndRotateCharacter()
     {
         Vector3 moveDirection = new Vector3(input.x, 0f, input.y).normalized;
 
         if (moveDirection.magnitude <= 0.1f)
         {
-            return; // Skip movement if input is too small
+            return; 
         }
 
-        // Adjust speed based on joystick magnitude
         if (joystickController.magnitude >= 0.2)
         {
             if (joystickController.magnitude <= 0.3f)
@@ -89,25 +85,21 @@ public class CharacterMovement : MonoBehaviour
             movementConfig.speed = 0f;
         }
 
-        // Rotate the character smoothly
         float targetAngle = Mathf.Atan2(moveDirection.x, moveDirection.z) * Mathf.Rad2Deg;
         float smoothAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, movementConfig.rotationSmoothTime);
         transform.rotation = Quaternion.Euler(0f, smoothAngle, 0f);
 
-        // Apply horizontal movement
         Vector3 horizontalMovement = moveDirection * movementConfig.speed;
 
-        // Apply gravity
         if (characterController.isGrounded)
         {
-            verticalVelocity = 0f; // Reset vertical velocity when grounded
+            verticalVelocity = 0f;
         }
         else
         {
-            verticalVelocity += gravity * Time.deltaTime; // Apply gravity over time
+            verticalVelocity += gravity * Time.deltaTime;
         }
 
-        // Combine horizontal and vertical movement
         Vector3 movement = new Vector3(horizontalMovement.x, verticalVelocity, horizontalMovement.z) * Time.deltaTime;
         characterController.Move(movement);
     }
